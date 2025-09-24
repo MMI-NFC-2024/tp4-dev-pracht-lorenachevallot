@@ -6,16 +6,15 @@ import penguins from "../assets/penguins.json";
 ---
 
 <Layout>
-  <h1 class="text-2xl">Test Astro et Plot (Observablehq)</h1>
-  <PlotFigure
-    options={{
-      marks: [
-        Plot.dot(penguins, {
-          x: "culmen_length_mm",
-          y: "culmen_depth_mm",
-          stroke: "species",
-        }),
-      ],
-    }}
-  />
+  <div class="w-full h-full flex flex-col items-center p-8">
+    <h1 class="text-6xl font-bold">TP N4</h1>
+    <ul class="text-xl mt-32 flex gap-2">
+      <li class="bg-violet-400 text-white px-4 py-2 rounded-2xl">
+        <a href="/simple">Simple</a>
+      </li>
+      <li class="bg-violet-400 text-white px-4 py-2 rounded-2xl">
+        <a href="/simple">Simple penguins</a>
+      </li>
+    </ul>
+  </div>
 </Layout>
