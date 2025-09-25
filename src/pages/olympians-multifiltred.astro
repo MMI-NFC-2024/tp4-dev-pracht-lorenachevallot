@@ -1,0 +1,121 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PlotFigure from "../components/PlotFigure.astro";
+import * as Plot from "@observablehq/plot";
+import olympians from "../assets/olympians.json";
+---
+
+<Layout>
+    <div
+        class="min-h-screen bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-50 p-8"
+    >
+        <h1 class="text-4xl font-light text-center mb-8">
+            <span
+                class="bg-gradient-to-r font-bold from-violet-600 to-purple-600 bg-clip-text text-transparent"
+            >
+                Graphique multi filtré des athlètes olympiques
+            </span>
+        </h1>
+
+        <div
+            class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-violet-100 p-8 max-w-4xl mx-auto"
+        >
+            <div class="mb-4 text-center">
+                <select
+                    name="sport"
+                    id="sport"
+                    class="px-4 py-2 rounded-lg border border-violet-200 bg-white"
+                >
+                    <option value="">All sports</option>
+                    <option value="basketball">Basketball</option>
+                    <option value="football">Football</option>
+                    <option value="aquatics">Natation</option>
+                </select>
+                <select
+                    name="sex"
+                    id="sex"
+                    class="px-4 py-2 rounded-lg border border-violet-200 bg-white"
+                >
+                    <option value="">All sexes</option>
+                    <option value="male">Homme</option>
+                    <option value="female">Femme</option>
+                </select>
+                <select
+                    name="nationality"
+                    id="nationality"
+                    class="px-4 py-2 rounded-lg border border-violet-200 bg-white"
+                >
+                    <option value="">Toutes les nationalités</option>
+                    <option value="FRA">Française</option>
+                    <option value="USA">Américaine</option>
+                    <option value="GER">Allemande</option>
+                    <option value="JPN">Japonaise</option>
+                    <option value="ITA">Italienne</option>
+                    <option value="CAN">Canadienne</option>
+                    <option value="AUS">Australienne</option>
+                    <option value="BRA">Brésilienne</option>
+                </select>
+            </div>
+            <div id="myplot" class="flex justify-center"></div>
+        </div>
+    </div>
+    <script>
+        // Importe la librairie Plot d'ObservableHQ
+        import * as Plot from "@observablehq/plot";
+        // Importe les données des athlètes olympiques depuis un fichier JSON
+        import olympians from "../assets/olympians.json";
+
+        // Récupère l'élément select pour choisir le sexe
+        const selectSex = document.getElementById("sex") as HTMLSelectElement;
+        const selectSport = document.getElementById(
+            "sport",
+        ) as HTMLSelectElement;
+        const selectNationality = document.getElementById(
+            "nationality",
+        ) as HTMLSelectElement;
+
+        // Fonction pour afficher le graphique
+        function renderPlot() {
+            const sport = selectSport.value;
+            const sex = selectSex.value;
+            const nationality = selectNationality.value;
+
+            // Sélectionne la div où le graphique sera affiché
+            const div = document.querySelector("#myplot");
+
+            // Vide le contenu précédent de la div
+            if (div) {
+                div.innerHTML = "";
+            }
+            // Crée le graphique avec Plot
+            const plot = Plot.plot({
+                marks: [
+                    // Ajoute les points du graphique, filtrés selon l'espèce choisie
+                    Plot.dot(olympians, {
+                        x: "weight", // Axe X : taille
+                        y: "height", // Axe Y : poids
+                        stroke: "sport", // Couleur selon le sport
+                        // Filtre selon le sport sélectionné
+                        filter: (d) =>
+                            (sport ? d.sport === sport : true) &&
+                            (sex ? d.sex === sex : true) &&
+                            (nationality
+                                ? d.nationality === nationality
+                                : true),
+                    }),
+                ],
+            });
+            // Ajoute le graphique à la div
+            if (div) {
+                div.appendChild(plot);
+            }
+        }
+
+        // Ajoute un écouteur d'événement pour le changement d'espèce (appel 'renderPlot')
+        selectSex.addEventListener("change", renderPlot);
+        selectSport.addEventListener("change", renderPlot);
+        selectNationality.addEventListener("change", renderPlot);
+        // Affiche le graphique au chargement de la page
+        renderPlot();
+    </script>
+</Layout>

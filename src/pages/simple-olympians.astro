@@ -1,0 +1,36 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PlotFigure from "../components/PlotFigure.astro";
+import * as Plot from "@observablehq/plot";
+import olympians from "../assets/olympians.json";
+---
+
+<Layout>
+    <div
+        class="min-h-screen bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-50 p-8"
+    >
+        <h1 class="text-4xl font-light text-center mb-8">
+            <span
+                class="bg-gradient-to-r font-bold from-violet-600 to-purple-600 bg-clip-text text-transparent"
+            >
+                Graphique simple des athlètes olympiques
+            </span>
+        </h1>
+
+        <div
+            class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-violet-100 p-8 max-w-4xl mx-auto flex items-center justify-center"
+        >
+            <PlotFigure
+                options={{
+                    marks: [
+                        Plot.dot(olympians, {
+                            x: "height",
+                            y: "weight",
+                            stroke: "sport",
+                        }),
+                    ],
+                }}
+            />
+        </div>
+    </div>
+</Layout>
